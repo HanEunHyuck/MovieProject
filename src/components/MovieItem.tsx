@@ -4,20 +4,19 @@ import { Movie } from '../types/movie';
 
 const MovieItem = ({ movie }: { movie: Movie }) => {
   return (
-    <Link to={`/details/${movie.imdbID}`} type='button'>
+    <Link to={`/details/${movie.imdbID}`}>
       <img
-        src={movie.Poster !== 'N/A' ? movie.Poster : '/placeholder_img.png'}
+        src={movie.Poster}
         alt={movie.Title}
-        className='w-full'
-        onError={e => {
-          e.currentTarget.src = '/placeholder_img.png';
-        }}
+        className='h-100 w-full object-fill'
       />
-      <div className='truncate text-2xl'>{movie.Title}</div>
-      <div className='flex gap-2'>
-        <div>{movie.Year}</div>
-        <div>{movie.Ratings?.[0]?.Value || '평점 없음'}</div>
-      </div>
+      <span className='mt-4 block truncate text-2xl font-bold'>
+        {movie.Title}
+      </span>
+      <span className='flex gap-2 text-lg'>
+        <span>{movie.Year}</span>
+        <span className='text-red-500'>{movie.imdbRating}</span>
+      </span>
     </Link>
   );
 };

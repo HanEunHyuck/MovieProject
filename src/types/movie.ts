@@ -1,12 +1,14 @@
-export type Rating = {
-  Source: string;
-  Value: string;
-};
-
 export type Movie = {
   imdbID: string;
   Poster: string;
   Title: string;
-  Year: number;
-  Ratings: Rating[];
+  Year: string;
+  imdbRating: string;
+
+  Released: string;
+  Runtime: string;
+  Plot: string;
+  Genre: string;
+  Director: string;
+  Actors: string;
 };

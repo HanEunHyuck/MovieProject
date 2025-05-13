@@ -1,45 +1,29 @@
-import { useEffect, useState } from 'react';
+//route
+import { Link } from 'react-router-dom';
 
+// components
 import MovieItem from '../../components/MovieItem';
-import Loading from '../../components/Loading';
 
-import { Movie } from '../../types/movie';
-
-import { Pagination } from 'swiper/modules';
+// library
+import { Pagination, Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
+// data
 import movieData from '../../data/data.json';
 
+// utils
 import shuffle from '../../utils/shuffle';
 
 const MainPage = () => {
-  // const movieId = 'tt3896198';
-  // const [movies, setMovies] = useState<Movie[]>([]);
+  const shuffledMovies = shuffle(movieData).slice(0, 5);
 
-  // const fetchMovieData = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       `https://www.omdbapi.com/?i=${movieId}&apikey=8e5fae38`,
-  //     );
-  //     const data = await response.json();
+  const rateSortMovies = movieData
+    .sort((a, b) => parseFloat(b.imdbRating) - parseFloat(a.imdbRating))
+    .slice(0, 10);
 
-  //     if (response.ok) {
-  //       setMovies(data);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchMovieData();
-  // }, []);
-
-  // if (!movies) {
-  //   return <Loading />;
-  // }
-
-  const shuffledMovie = shuffle(movieData).slice(0, 5);
+  const latestMovies = movieData
+    .sort((a, b) => parseFloat(b.Year) - parseFloat(a.Year))
+    .slice(0, 10);
 
   return (
     <div className='container'>
@@ -49,42 +33,65 @@ const MainPage = () => {
           modules={[Pagination]}
           className='main-swiper'
         >
-          {shuffledMovie.map((movie, index) => (
+          {shuffledMovies.map((movie, index) => (
             <SwiperSlide key={index}>
-              <div className='flex items-center justify-center gap-5'>
-                <img
-                  src={
-                    movie.Poster !== 'N/A'
-                      ? movie.Poster
-                      : '/placeholder_img.png'
-                  }
-                  alt={movie.Title}
-                  className='w-full'
-                  onError={e => {
-                    e.currentTarget.src = '/placeholder_img.png';
-                  }}
-                />
-                <div className='flex flex-col'>
-                  <div className='truncate text-2xl'>{movie.Title}</div>
-                  <div>
-                    <div>{movie.Year}</div>
-                    <div>{movie.Ratings?.[0]?.Value || '평점 없음'}</div>
+              <Link to={`details/${movie.imdbID}`}>
+                <div className='relative z-1 flex items-center justify-center gap-6 py-40'>
+                  <img src={movie.Poster} alt={movie.Title} className='h-120' />
+                  <div className='flex flex-col gap-3 text-center font-bold'>
+                    <div className='max-w-120 text-4xl'>{movie.Title}</div>
+                    <div className='text-xl text-red-500'>
+                      {movie.imdbRating}
+                    </div>
                   </div>
                 </div>
-              </div>
+                <div className='absolute inset-0 bg-gradient-to-t from-[#FD3C1A] via-transparent to-transparent opacity-25'>
+                  <img
+                    src={movie.Poster}
+                    alt=''
+                    className='h-full w-full overflow-hidden object-cover opacity-30'
+                  />
+                </div>
+              </Link>
             </SwiperSlide>
           ))}
         </Swiper>
       </main>
       <div className='content-wrap'>
         <section>
+          <h2 className='section-title'>Rate</h2>
           <Swiper
             slidesPerView={4}
-            spaceBetween={30}
-            pagination={true}
-            modules={[Pagination]}
+            spaceBetween={28}
+            navigation={true}
+            modules={[Navigation]}
+            className='section-swiper'
           >
-            {shuffledMovie.map((movie, index) => (
+            {rateSortMovies.map((movie, index) => (
+              <SwiperSlide key={index}>
+                <span className='absolute top-2 left-4 text-6xl'>
+                  {index + 1}
+                </span>
+                <MovieItem movie={movie} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </section>
+
+        <div className='mx-auto my-16 max-w-330'>
+          <img src='./main_bg_logo1.png' alt='' />
+        </div>
+
+        <section>
+          <h2 className='section-title'>Latest Release</h2>
+          <Swiper
+            slidesPerView={4}
+            spaceBetween={28}
+            navigation={true}
+            modules={[Navigation]}
+            className='section-swiper'
+          >
+            {latestMovies.map((movie, index) => (
               <SwiperSlide key={index}>
                 <MovieItem movie={movie} />
               </SwiperSlide>
