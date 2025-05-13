@@ -1,0 +1,30 @@
+@import 'tailwindcss';
+
+@layer utilities {
+  * {
+    @apply text-white;
+  }
+  /* layout */
+  header {
+    @apply fixed z-100 flex h-25 w-full items-center justify-between bg-neutral-700 px-4 py-5;
+  }
+  .container {
+    @apply max-w-none bg-neutral-700;
+  }
+  .content-wrap {
+    @apply mx-auto max-w-300 pt-25;
+  }
+
+  /* main */
+  .main-swiper {
+    @apply pt-25!;
+  }
+
+  /* common */
+  .spinner-wrap {
+    @apply fixed top-0 left-0 z-100 flex h-screen w-screen items-center justify-center bg-neutral-800;
+    .spinner {
+      @apply h-20 w-20 animate-spin rounded-full border-8 border-[#4D4B4B] border-t-white;
+    }
+  }
+}
