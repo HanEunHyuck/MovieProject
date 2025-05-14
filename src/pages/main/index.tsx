@@ -1,11 +1,16 @@
-//route
+// react
+import { useMemo, useState } from 'react';
+
+// route
 import { Link } from 'react-router-dom';
 
 // components
 import MovieItem from '../../components/MovieItem';
+import Dropdown from '../../components/Dropdown';
+import Input from '../../components/Input';
 
 // library
-import { Pagination, Navigation } from 'swiper/modules';
+import { Pagination, Navigation, Autoplay } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 // data
@@ -14,23 +19,39 @@ import movieData from '../../data/data.json';
 // utils
 import shuffle from '../../utils/shuffle';
 
+// store
+import useStore from '../../store/useStore';
+
+const YEARS = ['All years', '2023', '2022', '2021', '2020'];
+
 const MainPage = () => {
-  const shuffledMovies = shuffle(movieData).slice(0, 5);
+  const [text, setText] = useState('');
 
-  const rateSortMovies = movieData
-    .sort((a, b) => parseFloat(b.imdbRating) - parseFloat(a.imdbRating))
-    .slice(0, 10);
+  const { setSelectedItem } = useStore();
 
-  const latestMovies = movieData
-    .sort((a, b) => parseFloat(b.Year) - parseFloat(a.Year))
-    .slice(0, 10);
+  useMemo(() => setSelectedItem(YEARS[0]), []);
+
+  const shuffledMovies = useMemo(() => shuffle(movieData).slice(0, 5), []);
+
+  const rateSortMovies = useMemo(() => {
+    return [...movieData]
+      .sort((a, b) => parseFloat(b.imdbRating) - parseFloat(a.imdbRating))
+      .slice(0, 10);
+  }, []);
+
+  const latestMovies = useMemo(() => {
+    return [...movieData]
+      .sort((a, b) => parseFloat(b.Year) - parseFloat(a.Year))
+      .slice(0, 10);
+  }, []);
 
   return (
     <div className='container'>
       <main>
         <Swiper
           pagination={true}
-          modules={[Pagination]}
+          autoplay={true}
+          modules={[Pagination, Autoplay]}
           className='main-swiper'
         >
           {shuffledMovies.map((movie, index) => (
@@ -58,6 +79,15 @@ const MainPage = () => {
         </Swiper>
       </main>
       <div className='content-wrap'>
+        <section className='mb-10 flex gap-4'>
+          <Dropdown items={YEARS} onSelect={setSelectedItem} />
+          <Input
+            type='search'
+            value={text}
+            onChange={e => setText(e.target.value)}
+            placeholder='Enter Movie Title'
+          />
+        </section>
         <section>
           <h2 className='section-title'>Rate</h2>
           <Swiper

@@ -54,7 +54,15 @@ const DetailsPage = () => {
               <p className='text-lg'>{movie.Plot}</p>
             </div>
             <div className='shrink-0'>
-              <img src={movie.Poster} alt='' />
+              <img
+                src={movie.Poster}
+                alt=''
+                className='w-80'
+                onError={e => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/placeholder_img.png';
+                }}
+              />
             </div>
           </div>
           <ul className='border-t-1 border-b-1 px-4 py-10 [&>li]:mb-4 [&>li]:flex [&>li]:gap-4'>

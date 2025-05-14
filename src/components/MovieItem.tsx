@@ -9,6 +9,10 @@ const MovieItem = ({ movie }: { movie: Movie }) => {
         src={movie.Poster}
         alt={movie.Title}
         className='h-100 w-full object-fill'
+        onError={e => {
+          e.currentTarget.onerror = null;
+          e.currentTarget.src = '/placeholder_img.png';
+        }}
       />
       <span className='mt-4 block truncate text-2xl font-bold'>
         {movie.Title}
